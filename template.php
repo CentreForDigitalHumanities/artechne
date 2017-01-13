@@ -57,6 +57,7 @@ PREFIX gvp:    <http://vocab.getty.edu/ontology#>
 SELECT DISTINCT * where {
   ?c gvp:prefLabelGVP/xl:literalForm ?lab .
   ?c foaf:focus/gvp:biographyPreferred ?bio .
+  ?c rdfs:seeAlso ?see .
   ?bio schema:description ?desc .
   ?bio schema:gender/rdfs:label ?gender . FILTER (lang(?gender) = "en") .
   ?bio gvp:estStart ?bd .
@@ -72,7 +73,7 @@ SELECT DISTINCT * where {
   $result = json_decode($sparql_result['result'])->results->bindings[0];
 
   $html = '<h3>Information from the Getty ULAN</h3>';
-  $html .= '<h4><a href="" target="_blank">' . $result->lab->value . '</a> (';
+  $html .= '<h4><a href="' . $result->see->value . '" target="_blank">' . $result->lab->value . '</a> (';
   $html .= $result->bd->value;
   if (isset($result->bl)) $html .= ' (' . $result->bl->value . ')';
   $html .= ' - ';
