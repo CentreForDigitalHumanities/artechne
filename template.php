@@ -1,21 +1,26 @@
 <?php
-/**
- * @file
- * The primary PHP file for this theme.
- */
 
-// Add Open Sans/Merriweather fonts
+/**
+ * Add Open Sans/Merriweather fonts
+ * @param array &$vars 
+ * @see https://api.drupal.org/api/drupal/includes%21theme.inc/function/template_preprocess_html/7.x
+ */
 function artechne_preprocess_html(&$vars) {
   drupal_add_css('//fonts.googleapis.com/css?family=Open+Sans:400,300,700|Merriweather:400,700,400italic&subset=latin,latin-ext', array(
       'type' => 'external'
     ));
 }
 
-// Actions to alter form display
-// @see https://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_form_alter/7.x
+/**
+ * Actions to alter form display
+ * @param array &$form 
+ * @param array &$form_state 
+ * @param int $form_id 
+ * @see https://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_form_alter/7.x
+ */
 function artechne_form_alter(&$form, &$form_state, $form_id) {
   // Change search form placeholder (doesn't work)
-  if ($form_id == 'search_api_page_search_form_search_artechne_database') {
+  if ($form_id == 'search_api_page_search_form_search_artechne_dataase') {
     $form['search_api_page_search_form_search_artechne_database']['#attributes']['placeholder'] = t('Search database');
   }
 
@@ -26,30 +31,57 @@ function artechne_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
-// Display the menu blocks as tabs
+/**
+ * Display the menu blocks as tabs
+ * @param array &$variables 
+ * @see https://api.drupal.org/api/drupal/includes!menu.inc/function/theme_menu_tree/7.x
+ */
 function artechne_menu_tree(&$variables) {
   return '<ul class="menu nav nav-tabs">' . $variables['tree'] . '</ul>';
 }
 
 /**
- * Add line breaks to transcription field
+ * Preprocesses field display
+ * @param array &$variables 
+ * @param array $hook 
+ * @see https://api.drupal.org/api/drupal/modules%21field%21field.module/function/template_preprocess_field/7.x
  */
 function artechne_preprocess_field(&$variables, $hook) {
+  // Add line breaks to transcription field
   if ($variables['element']['#field_name'] == 'field_transcription') {
     $variables['items'][0]['#markup'] = nl2br($variables['items'][0]['#markup']);
+  }
+
+  // Add link to Getty CONA for Getty ID field
+  if ($variables['element']['#field_name'] == 'field_getty_id') {
+    $href = _getty_cona_link($variables['items'][0]['#markup']);
+    $variables['items'][0]['#markup'] = '<a href="' . $href . '" target="_blank">View in Getty CONA</a>';
   }
 }
 
 /**
- * For Person and Glossary items, retrieve extra biographical details via SPARQL
+ * Builds the link to Getty CONA.
+ * @param string $id 
+ * @return The URL to the Getty CONA.
+ */
+function _getty_cona_link($id) {
+  return 'http://www.getty.edu/cona/CONAFullSubject.aspx?subid=' . $id;
+}
+
+/**
+ * Preprocesses node display.
+ * @param array &$variables 
+ * @see https://api.drupal.org/api/drupal/modules%21node%21node.module/function/template_preprocess_node/7.x
  */
 function artechne_preprocess_node(&$variables) {
+  // For Person and Glossary items, retrieve extra biographical details via SPARQL
   if ($variables['type'] == 'person' && $variables['field_getty_id']) _preprocess_person($variables);
   if ($variables['type'] == 'glossary' && $variables['field_getty_id']) _preprocess_glossary($variables);
 }
 
 /**
  * Retrieve biographical details on a Person from the Getty ULAN via a SPARQL query
+ * @param array &$variables 
  */
 function _preprocess_person(&$variables) {
   $id = $variables['field_getty_id']['und'][0]['value'];
@@ -94,6 +126,7 @@ SELECT DISTINCT * where {
 
 /**
  * Retrieve details on a Glossary item from the Getty AAT via a SPARQL query
+ * @param array &$variables 
  */
 function _preprocess_glossary(&$variables) {
   $id = $variables['field_getty_id']['und'][0]['value'];
@@ -130,28 +163,3 @@ SELECT DISTINCT * where {
 
   $variables['getty_results'] = $html;
 }
-
-/* Extra facets (doesn't work)
-function artechne_facetapi_facet_info($searcher_info) {
-   $facets = array();
-
-   $facets['glossary'] = array(
-       'label' => t('Glossary'),
-       'description' => t('Filter by Glossary Entry.'),
-       'field' => 'rel_glossary_recipes',
-       'facet mincount allowed' => TRUE,
-       'dependency plugins' => array('bundle', 'role'),
-   );
-
-
-   $facets['artistic_techniques'] = array(
-       'label' => t('Artistic Techniques'),
-       'description' => t('Filter by Artistic Techniques.'),
-       'field' => 'tosnl_field_artistic_techniques',
-       'facet mincount allowed' => TRUE,
-       'dependency plugins' => array('bundle', 'role'),
-   );
-
-  return $facets;
-}*/
-
