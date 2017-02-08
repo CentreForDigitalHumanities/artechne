@@ -11,11 +11,18 @@ function artechne_preprocess_html(&$vars) {
     ));
 }
 
-// Change search form placeholder (doesn't work)
+// Actions to alter form display
+// @see https://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_form_alter/7.x
 function artechne_form_alter(&$form, &$form_state, $form_id) {
+  // Change search form placeholder (doesn't work)
   if ($form_id == 'search_api_page_search_form_search_artechne_database') {
-    // HTML5 placeholder attribute
     $form['search_api_page_search_form_search_artechne_database']['#attributes']['placeholder'] = t('Search database');
+  }
+
+  // Sets the max length of relation target to 999, resolves #1
+  if (isset($form['relation_options']['targets']))
+  {
+    $form['relation_options']['targets']['target_2']['#maxlength'] = 999;
   }
 }
 
