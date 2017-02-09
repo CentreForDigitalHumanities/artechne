@@ -56,3 +56,10 @@ footer {
   display: none;
 }
 
+/**
+ * Display images inline
+ */
+.field-type-image .field-item, .field-type-image img {
+  display: inline;
+  padding: 5px;
+}
