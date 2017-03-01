@@ -1,0 +1,39 @@
+/**
+ * Specific styling for the advanced search page
+ */
+.page-search-api {
+    .views-submit-button {
+        display: none;
+    }
+
+    .block-facetapi .block-title {
+        font-size: 14px;
+        font-weight: bold;
+        margin: 0 0 5px 0;
+    }
+
+    .text-range {
+        display: none;
+    }
+
+    .control-label {
+        display: none;
+    }
+
+    .range-slider-box {
+        display: none;
+    }
+
+    #edit-range-from,
+    #edit-range-to {
+        max-width: 60px;
+    }
+
+    .search-api-ranges-widget .form-submit {
+        display: none;
+    }
+
+    .breadcrumb {
+        display: none;
+    }
+}

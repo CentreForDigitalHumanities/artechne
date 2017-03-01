@@ -1,0 +1,24 @@
+/**
+ * Specific styling for the advanced search page
+ */
+.page-search-api .views-submit-button {
+  display: none; }
+.page-search-api .block-facetapi .block-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0 0 5px 0; }
+.page-search-api .text-range {
+  display: none; }
+.page-search-api .control-label {
+  display: none; }
+.page-search-api .range-slider-box {
+  display: none; }
+.page-search-api #edit-range-from,
+.page-search-api #edit-range-to {
+  max-width: 60px; }
+.page-search-api .search-api-ranges-widget .form-submit {
+  display: none; }
+.page-search-api .breadcrumb {
+  display: none; }
+
+/*# sourceMappingURL=search.css.map */

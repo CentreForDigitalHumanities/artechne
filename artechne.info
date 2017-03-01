@@ -24,6 +24,6 @@ regions[page_bottom]    = 'Page bottom'
 ;; Stylesheets
 ;;;;;;;;;;;;;;;;;;;;;
 
-stylesheets[all][] = css/style.css
-stylesheets[all][] = css/navbar.css
-
+stylesheets[all][] = css/compiled/style.css
+stylesheets[all][] = css/compiled/navbar.css
+stylesheets[all][] = css/compiled/search.css

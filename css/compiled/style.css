@@ -4,62 +4,49 @@
 .btn {
   background-color: #ffcd00;
   color: #000;
-  border: 0;
-}
+  border: 0; }
 
 /**
  * Make the header image floating s.t. navigation is still available
  */
 #block-block-4 {
-  float: right;
-}
-
-/**
-footer {
-  text-align: center;
-  color: white;
-  background-color: black;
-}*/
+  float: right; }
 
 /**
  * Removing text of home menu item
  */
 .menuitem-home {
-  display: none;
-}
+  display: none; }
 
 /**
  * Adding a margin below the lead
  */
 .lead {
-  margin-bottom: 1em !important;
-}
+  margin-bottom: 1em !important; }
 
 /**
  * Adding a margin below content sections
  */
 .region-content section {
-  margin-bottom: 1em;
-}
+  margin-bottom: 1em; }
 
 /**
  * Submenu styling
  */
 #block-menu-block-1 h2 {
-  font-size: 1.5em;
-}
+  font-size: 1.5em; }
 
 /**
  * Removing the exposed filter on the map block
  */
 #block-views-map-search-block-1 .view-filters {
-  display: none;
-}
+  display: none; }
 
 /**
  * Display images inline
  */
 .field-type-image .field-item, .field-type-image img {
   display: inline;
-  padding: 5px;
-}
+  padding: 5px; }
+
+/*# sourceMappingURL=style.css.map */
