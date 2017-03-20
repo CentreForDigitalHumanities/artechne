@@ -11,35 +11,40 @@
 /**
  * Specific styling for the advanced search page
  */
-.page-advanced-search h2 {
+.page-advanced-search h2, .page-advanced-search-map h2 {
   font-size: 21px; }
-.page-advanced-search .breadcrumb {
+.page-advanced-search .breadcrumb, .page-advanced-search-map .breadcrumb {
   display: none; }
 .page-advanced-search #edit-field-year-from-wrapper,
-.page-advanced-search #edit-field-year-to-wrapper {
+.page-advanced-search #edit-field-year-to-wrapper, .page-advanced-search-map #edit-field-year-from-wrapper,
+.page-advanced-search-map #edit-field-year-to-wrapper {
   display: inline-block;
   padding: .5em .5em 0 0; }
   .page-advanced-search #edit-field-year-from-wrapper .views-widget,
-  .page-advanced-search #edit-field-year-to-wrapper .views-widget {
+  .page-advanced-search #edit-field-year-to-wrapper .views-widget, .page-advanced-search-map #edit-field-year-from-wrapper .views-widget,
+  .page-advanced-search-map #edit-field-year-to-wrapper .views-widget {
     display: block; }
   .page-advanced-search #edit-field-year-from-wrapper input,
-  .page-advanced-search #edit-field-year-to-wrapper input {
+  .page-advanced-search #edit-field-year-to-wrapper input, .page-advanced-search-map #edit-field-year-from-wrapper input,
+  .page-advanced-search-map #edit-field-year-to-wrapper input {
     display: inline-block;
     max-width: 80px; }
   .page-advanced-search #edit-field-year-from-wrapper .form-item-field-year-from::after,
-  .page-advanced-search #edit-field-year-to-wrapper .form-item-field-year-from::after {
+  .page-advanced-search #edit-field-year-to-wrapper .form-item-field-year-from::after, .page-advanced-search-map #edit-field-year-from-wrapper .form-item-field-year-from::after,
+  .page-advanced-search-map #edit-field-year-to-wrapper .form-item-field-year-from::after {
     content: " - ";
     font-weight: bold; }
   .page-advanced-search #edit-field-year-from-wrapper label[for=edit-field-year-to],
-  .page-advanced-search #edit-field-year-to-wrapper label[for=edit-field-year-to] {
+  .page-advanced-search #edit-field-year-to-wrapper label[for=edit-field-year-to], .page-advanced-search-map #edit-field-year-from-wrapper label[for=edit-field-year-to],
+  .page-advanced-search-map #edit-field-year-to-wrapper label[for=edit-field-year-to] {
     visibility: hidden; }
-.page-advanced-search .block-facetapi .block-title {
+.page-advanced-search .block-facetapi .block-title, .page-advanced-search-map .block-facetapi .block-title {
   font-size: 14px;
   font-weight: bold;
   margin: 0 0 5px 0; }
-.page-advanced-search .block-facetapi ul {
+.page-advanced-search .block-facetapi ul, .page-advanced-search-map .block-facetapi ul {
   padding: 0; }
-.page-advanced-search .block-facetapi .facetapi-limit-link {
+.page-advanced-search .block-facetapi .facetapi-limit-link, .page-advanced-search-map .block-facetapi .facetapi-limit-link {
   font-style: italic; }
 
 /*# sourceMappingURL=search.css.map */
