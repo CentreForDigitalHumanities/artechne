@@ -27,3 +27,9 @@ regions[page_bottom]    = 'Page bottom'
 stylesheets[all][] = css/compiled/style.css
 stylesheets[all][] = css/compiled/navbar.css
 stylesheets[all][] = css/compiled/search.css
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Javascript
+;;;;;;;;;;;;;;;;;;;;;
+
+scripts[] = js/search.js
