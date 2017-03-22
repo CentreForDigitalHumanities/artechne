@@ -15,6 +15,8 @@
   font-size: 21px; }
 .page-advanced-search .breadcrumb, .page-advanced-search-map .breadcrumb {
   display: none; }
+.page-advanced-search label[for="incl_trans"], .page-advanced-search-map label[for="incl_trans"] {
+  font-weight: normal; }
 .page-advanced-search #edit-field-year-from-wrapper,
 .page-advanced-search #edit-field-year-to-wrapper, .page-advanced-search-map #edit-field-year-from-wrapper,
 .page-advanced-search-map #edit-field-year-to-wrapper {

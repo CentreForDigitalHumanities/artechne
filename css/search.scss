@@ -33,6 +33,11 @@
         display: none;
     }
 
+    // Normal font weight for the include translations label
+    label[for="incl_trans"] {
+        font-weight: normal;
+    }
+
     // Year from/to fields displayed inline, with a '-' after the from date
     #edit-field-year-from-wrapper,
     #edit-field-year-to-wrapper {
