@@ -19,7 +19,7 @@ function field_id($node) {
 
 // Retrieves key_cologne for a node
 function key_cologne($node) {
-        return $node->field_key_cologne['und'][0]['value'];
+	return $node->field_key_cologne['und'][0]['value'];
 }
 
 // Retrieves source_recipe_location for a node
@@ -29,12 +29,12 @@ function recipe_location($node) {
 
 // Retrieves artistic_contents for a node
 function artistic_contents($node) {
-        return $node->field_artistic_contents['und'][0]['value'];
+	return $node->field_artistic_contents['und'][0]['value'];
 }
 
 // Retrieves artistic_techniques for a node
 function artistic_techniques($node) {
-        return $node->field_artistic_techniques['und'][0]['value'];
+	return $node->field_artistic_techniques['und'][0]['value'];
 }
 
 // Main loop

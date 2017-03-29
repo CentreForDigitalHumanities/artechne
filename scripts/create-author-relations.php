@@ -1,7 +1,7 @@
 <?php
 // This scripts moves author data from sources to a person-source relation.
 
-// Retrieve all recipes with field_key_cologne filled
+// Retrieve all recipes with field_author filled
 $query = new EntityFieldQuery();
 $query->entityCondition('entity_type', 'node')
 	->entityCondition('bundle', 'source_codex')
@@ -14,7 +14,7 @@ echo "Found " . count($result['node']) . " nodes.\n";
 
 // Retrieves author for a node
 function author($node) {
-        return $node->field_author['und'][0]['value'];
+	return $node->field_author['und'][0]['value'];
 }
 
 // Main loop
@@ -28,8 +28,8 @@ foreach ($result['node'] as $node)
 	// Try to fetch the person from the database
 	$query = new EntityFieldQuery();
 	$query->entityCondition('entity_type', 'node')
-        	->entityCondition('bundle', 'person')
-	        ->propertyCondition('title', $author);
+			->entityCondition('bundle', 'person')
+			->propertyCondition('title', $author);
 	$result = $query->execute();
 	
 	if (count($result) > 1)
@@ -73,4 +73,3 @@ foreach ($result['node'] as $node)
 }
 
 echo "Finished\n";
-
