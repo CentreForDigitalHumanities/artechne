@@ -24,12 +24,12 @@ regions[page_bottom]    = 'Page bottom'
 ;; Stylesheets
 ;;;;;;;;;;;;;;;;;;;;;
 
-stylesheets[all][] = css/compiled/style.css
-stylesheets[all][] = css/compiled/navbar.css
-stylesheets[all][] = css/compiled/search.css
+stylesheets[all][] = css/min/style.min.css
+stylesheets[all][] = css/min/navbar.min.css
+stylesheets[all][] = css/min/search.min.css
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Javascript
 ;;;;;;;;;;;;;;;;;;;;;
 
-scripts[] = js/search.js
+scripts[] = js/min/artechne.min.js
