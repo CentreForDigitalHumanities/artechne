@@ -65,6 +65,8 @@
 
     // Facet styling
     .block-facetapi {
+        margin-bottom: 1em;
+
         .block-title {
             font-size: 14px;
             font-weight: bold;
@@ -77,6 +79,10 @@
 
         .facetapi-limit-link {
             font-style: italic;
+        }
+
+        .facetapi-checkbox {
+            margin-right: .25em;
         }
     }
 }
