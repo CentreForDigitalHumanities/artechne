@@ -1,12 +1,26 @@
 (function($) {
-    $(document).ready(function(){
+    $(document).ready(function() {
         // Add query parameters to the block menu, so that searches are saved when switching views
         $("#block-menu-menu-advanced-search .nav a").each(function(i, e) {
             $(this).attr("href", e.href + window.location.search);
         });
 
+        move_search_button();
+
         add_translation_switch();
     });
+
+    // Hides the default submit button of the exposed forms below the facets,
+    // creates a replacement button below
+    function move_search_button() {
+        var submit = $(".views-exposed-widget.views-submit-button button"),
+            label = $("<label>Submit</label>");
+
+        submit.parent().hide();
+        label.attr("for", submit.attr("id"));
+        label.addClass(submit.attr("class"));
+        label.insertAfter(".block-facetapi:last");
+    }
 
     // Adds a checkbox to switch between transcriptions only or transcription + translation
     function add_translation_switch() {
