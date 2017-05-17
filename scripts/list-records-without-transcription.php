@@ -1,5 +1,6 @@
 <?php
-// This scripts retrieves all records without transcription
+// This scripts retrieves all records without transcription, and optionally turns them into drafts
+$to_draft = drush_get_option('to_draft', FALSE);
 
 // Unfortunately, this requires two queries, see https://drupal.stackexchange.com/a/49834 for details.
 // Retrieve all records WITH transcription
@@ -26,13 +27,18 @@ if ($r['node'])
 	$i = 0;
 	foreach ($result['node'] as $node)
 	{
-		// Skip nodes that already have their language specified
 		$n = node_load($node->nid);
 
 		echo implode(';', array($n->nid, $n->title));
 		echo "\n";
 
-		//if ($i == 10) break;
+		if ($to_draft)
+		{
+			$n->status = 0;
+			node_save($n);
+		}
+
+		// if ($i == 10) break;
 		
 		$i++;
 	}
