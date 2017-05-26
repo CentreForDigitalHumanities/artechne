@@ -5,10 +5,23 @@
             $(this).attr("href", e.href + window.location.search);
         });
 
+        create_advanced_search_button();
+
         move_search_button();
 
         add_translation_switch();
     });
+
+    // Creates a button to link to the advanced search with the current search terms
+    function create_advanced_search_button() {
+        var advanced_search = $("<a href='advanced-search' class='btn btn-primary pull-right' role='button'>Advanced search</a>");
+        $("input[value='search_api_page_search_form_artechne']").after(advanced_search);
+        advanced_search.on("click", function(e) {
+            e.preventDefault();
+            var search_value = $("#search-api-page-search-form-artechne input[type='text']").val();
+            location.href = "/advanced-search?search_api_views_fulltext_transcription=" + search_value;
+        });
+    }
 
     // Hides the default submit button of the exposed forms below the facets,
     // creates a replacement button below
