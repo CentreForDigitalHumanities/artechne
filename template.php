@@ -58,6 +58,21 @@ function artechne_views_pre_render(&$view) {
 }
 
 /**
+ * This hook allows for rewriting facet items. In this case, we convert the boolean filter
+ * 'field_has_image' to display the values as Yes/No rather than true/false.
+ * @param array &$build
+ * @param array &$settings
+ * @see https://www.drupal.org/project/facetapi_bonus
+ */
+function artechne_facet_items_alter(&$build, &$settings) {
+  if ($settings->facet == 'field_has_image') {
+    foreach($build as $key => $item) {
+      $build[$key]['#markup'] = $key ? 'Yes' : 'No';
+    }
+  }
+}
+
+/**
  * Preprocesses field display
  * @param array &$variables 
  * @param array $hook 
