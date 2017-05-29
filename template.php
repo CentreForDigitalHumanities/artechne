@@ -41,6 +41,23 @@ function artechne_menu_tree(&$variables) {
 }
 
 /**
+ * This hook is called right before the render process; and will return an empty result set
+ * for the search_api_page when none of the fulltext fields contains a search query.
+ * @param array &$view
+ * @see https://api.drupal.org/api/views/views.api.php/function/hook_views_pre_render/7.x-3.x
+ */
+function artechne_views_pre_render(&$view) {
+  if($view->name == 'search_api_page') {
+    if (strlen(trim($view->filter['search_api_views_fulltext']->value)) == 0 &&
+      strlen(trim($view->filter['search_api_views_fulltext_1']->value)) == 0 &&
+      strlen(trim($view->filter['search_api_views_fulltext_2']->value)) == 0) {
+      $view->result = [];
+      $view->query->pager = [];
+    }
+  }
+}
+
+/**
  * Preprocesses field display
  * @param array &$variables 
  * @param array $hook 
