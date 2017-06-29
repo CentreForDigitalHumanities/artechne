@@ -92,6 +92,53 @@ function artechne_preprocess_field(&$variables, $hook) {
 }
 
 /**
+ * Alters results from the Search API
+ * @param array &$results
+ * @param SearchApiQueryInterface $query
+ */
+function artechne_search_api_results_alter(array &$results, SearchApiQueryInterface $query)
+{
+  // At the cloud page, retrieve the tf and df for all terms in this query
+  if ($query->getOption('search id') == 'search_api_views:search_api_page:cloud')
+  {
+    $keys = $query->getKeys()[0];
+    if ($keys)
+    {
+      $q = array('q' => 'tm_field_transcription:' . $keys, 'tv.all' => 'true', 'indent' => 'true', 'fl' => 'tm_field_transcription');
+      $s = $query->getIndex()->server()->getSolrConnection()->makeServletRequest('tvrh', $q);
+
+      $tokens = array();
+      foreach ($s->termVectors as $key => $tv)
+      {
+        if (strpos($key, 'artechne') !== false)
+        {
+          foreach ($tv->tm_field_transcription as $token => $counts)
+          {
+            if (isset($tokens[$token]))
+            {
+              $tokens[$token]['tf'] += $counts->tf;
+            }
+            else
+            {
+              $tokens[$token] = array('tf' => $counts->tf, 'df' => $counts->df);
+            }
+          }
+        }
+      }
+
+      $result = array();
+      foreach ($tokens as $token => $counts)
+      {
+        $counts['token'] = $token;
+        array_push($result, $counts);
+      }
+
+      drupal_set_message(json_encode($result));
+    }
+  }
+}
+
+/**
  * Builds the link to Getty CONA.
  * @param string $id 
  * @return The URL to the Getty CONA.
