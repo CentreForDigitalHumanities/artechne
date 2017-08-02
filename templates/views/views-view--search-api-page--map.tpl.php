@@ -58,7 +58,7 @@
       <div id="tableContainerDiv" style="position:relative;margin-top:20px;"></div>
     </div>
     <link rel="stylesheet" href="sites/all/libraries/GeoTemCo/css/geotemco.css" type="text/css" />
-    <script src="sites/all/libraries/GeoTemCo/geotemco.js"></script>
+    <script src="sites/all/libraries/GeoTemCo/geotemco-min.js"></script>
     <script>
       var datasets = [];
       var mapDiv = document.getElementById("mapContainerDiv");
