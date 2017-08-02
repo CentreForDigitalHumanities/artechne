@@ -74,8 +74,8 @@
       }
 
       // Retrieve the words from the .alert-block (yes, very hacky)
-      var words = JSON.parse(jQuery('.alert-block').contents().filter(function(){ return this.nodeType == 3; }).text());
       jQuery('.alert-block').hide();
+      var words = JSON.parse(jQuery('.alert-block').contents().filter(function(){ return this.nodeType == 3; }).text());
 
       // Add content to the csv textarea, download on click
       jQuery('#csv').val(convert2csv(words));
