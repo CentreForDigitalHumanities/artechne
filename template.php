@@ -136,6 +136,100 @@ function artechne_search_api_results_alter(array &$results, SearchApiQueryInterf
       drupal_set_message(json_encode($result));
     }
   }
+
+  // At the collocations page, retrieve the tf and df for all terms in this query
+  if ($query->getOption('search id') == 'search_api_views:search_api_page:collocations')
+  {
+    $keys = $query->getKeys()[0];
+    if ($keys)
+    {
+      $q = array('q' => 'tm_field_transcription:' . $keys, 'tv.tf' => 'true', 'tv.positions' => 'true', 'indent' => 'true', 'fl' => 'tm_field_transcription');
+      $s = $query->getIndex()->server()->getSolrConnection()->makeServletRequest('tvrh', $q);
+
+      // Replace all "position:" occurrences with "p#:" to prevent problems with JSON decoding
+      $data = $s->data;
+      $offset = 0;
+      $needle = '"position":';
+      $count = 1;
+      while (($pos = strpos($data, $needle, $offset)) !== FALSE)
+      {
+        $replace =  '"p' . $count . '":';
+        $data = substr_replace($data, $replace, $pos, strlen($needle));
+        $offset += strlen($replace);
+        $count += 1;
+      }
+
+      $data_json = json_decode($data);
+
+      $COLLOCATIONS_NUMBER = 4;  // Note that this has to be changed at the front-end as well
+
+      // Initialize result arrays
+      $result = array();
+      for ($i = 1; $i <= $COLLOCATIONS_NUMBER; $i++)
+      {
+        $result[$i] = array();
+      }
+
+      // Retrieve the data from the termVectors component
+      foreach ($data_json->termVectors as $key => $tv)
+      {
+        if (strpos($key, 'artechne') !== false)
+        {
+          $positions = array();
+          foreach ($tv->tm_field_transcription as $token => $counts)
+          {
+            foreach ($counts->positions as $_ => $position)
+            {
+              $p = $position;
+              $p = strlen($position) == 3 ? substr($position, 0, 1) : substr($position, 0, 2);
+              $positions[$p] = array('token' => $token, 'count' => $counts->tf);
+            }
+          }
+
+          foreach ($positions as $i => $counts)
+          {
+            // Find the positions of the search terms
+            if (in_array($counts['token'], explode(' ', $keys)))
+            {
+              for ($j = 1; $j <= $COLLOCATIONS_NUMBER; $j++)
+              {
+                // Look both before and after the search terms
+                $term_positions = array();
+                if (isset($positions[$i + $j]))
+                {
+                  array_push($term_positions, $positions[$i + $j]);
+                }
+                if (isset($positions[$i - $j]))
+                {
+                  array_push($term_positions, $positions[$i - $j]);
+                }
+
+                foreach ($term_positions as $t)
+                {
+                  if (isset($result[$j][$t['token']]))
+                  {
+                    $result[$j][$t['token']] += $t['count'];
+                  }
+                  else
+                  {
+                    $result[$j][$t['token']] = $t['count'];
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Sort the resulting arrays by value
+      for ($i = 1; $i <= $COLLOCATIONS_NUMBER; $i++)
+      {
+        arsort($result[$i]);
+      }
+
+      drupal_set_message(json_encode($result));
+    }
+  }
 }
 
 /**
