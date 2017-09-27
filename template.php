@@ -256,6 +256,11 @@ function _getty_cona_link($id) {
  * @see https://api.drupal.org/api/drupal/modules%21node%21node.module/function/template_preprocess_node/7.x
  */
 function artechne_preprocess_node(&$variables) {
+  // Display the content type as title_suffix for all nodes (except basic pages)
+  if ($variables['type'] != 'page') {
+    $variables['title_suffix'] = '<span class="label label-default pull-right">' . node_type_get_name($variables['node']) . '</span>';
+  }
+
   // For Person and Glossary items, retrieve extra biographical details via SPARQL
   if ($variables['type'] == 'person' && $variables['field_getty_id']) _preprocess_person($variables);
   if ($variables['type'] == 'glossary' && $variables['field_getty_id']) _preprocess_glossary($variables);

@@ -1,5 +1,8 @@
 (function($) {
     $(document).ready(function() {
+        // Display the content type next to the node title
+        $("article header span").appendTo($(".page-header"));
+
         // Add query parameters to the block menu, so that searches are saved when switching views
         $("#block-menu-menu-advanced-search .nav a").each(function(i, e) {
             $(this).attr("href", e.href + window.location.search);
@@ -22,7 +25,6 @@
         var ct = $(".views-field-type span");
         ct.addClass("label label-default pull-right");
         ct.each(function() {
-            console.log($(this).closest(".views-row").find("h3"));
             $(this).closest(".views-row").find("h3").append(this);
         });
         $(".views-row").after("<hr>");
