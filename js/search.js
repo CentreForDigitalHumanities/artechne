@@ -5,6 +5,19 @@
             $(this).attr("href", e.href + window.location.search);
         });
 
+        // Change CSV button
+        var button = $(".page-advanced-search .feed-icon a");
+        button.empty();
+        button.addClass("btn btn-primary");
+        button.append("Download as .csv");
+        button.parent().addClass("pull-right");
+        button.parent().prependTo($("#block-current-search-standard"));
+
+        // Information header as alert
+        var header = $(".view-header");
+        header.addClass("panel-body");
+        header.wrap("<div class='alert alert-info' role='alert' style='padding: 0px;'></div>");
+
         create_advanced_search_button();
 
         move_search_button();
