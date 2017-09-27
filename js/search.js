@@ -18,6 +18,15 @@
         header.addClass("panel-body");
         header.wrap("<div class='alert alert-info' role='alert' style='padding: 0px;'></div>");
 
+        // Display content type next to title
+        var ct = $(".views-field-type span");
+        ct.addClass("label label-default pull-right");
+        ct.each(function() {
+            console.log($(this).closest(".views-row").find("h3"));
+            $(this).closest(".views-row").find("h3").append(this);
+        });
+        $(".views-row").after("<hr>");
+
         create_advanced_search_button();
 
         move_search_button();

@@ -74,7 +74,7 @@ function artechne_facet_items_alter(&$build, &$settings) {
 
 /**
  * Preprocesses field display
- * @param array &$variables 
+ * @param array &$variables
  * @param array $hook 
  * @see https://api.drupal.org/api/drupal/modules%21field%21field.module/function/template_preprocess_field/7.x
  */
@@ -89,6 +89,15 @@ function artechne_preprocess_field(&$variables, $hook) {
     $href = _getty_cona_link($variables['items'][0]['#markup']);
     $variables['items'][0]['#markup'] = '<a href="' . $href . '" target="_blank">View in Getty CONA</a>';
   }
+}
+
+/**
+ * Adds the content type to the Search API result template variables
+ * @param array &$variables
+ */
+function artechne_preprocess_search_api_page_result(&$variables) {
+  $node = node_load($variables['id']);
+  $variables['content_type'] = node_type_get_name($node);
 }
 
 /**
