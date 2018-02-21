@@ -60,11 +60,15 @@
     <link rel="stylesheet" href="sites/all/libraries/GeoTemCo/css/geotemco.css" type="text/css" />
     <script src="sites/all/libraries/GeoTemCo/geotemco-min.js"></script>
     <script>
-      var datasets = [];
+     var datasets = [];
+      var datasetsWithLocation = [];
+      // see below, entities without locations break the map.
+      var searchResultsWithLocation = []
+
       var mapDiv = document.getElementById("mapContainerDiv");
       var map = new WidgetWrapper();
       var mapWidget = new MapWidget(map,mapDiv,{
-        mapTitle: "Library location"
+        mapTitle: "Library location",
       });
       var timeDiv = document.getElementById("plotContainerDiv");
       var time = new WidgetWrapper();
@@ -78,11 +82,33 @@
       // Retrieve the JSON files from the advanced-search-json page, while keeping the GET filters
       var jsonUrl = window.location.href.replace("advanced-search-map", "advanced-search-json");
       var jsonFile = GeoTemConfig.getJson(jsonUrl);
-      datasets.push(new Dataset(GeoTemConfig.loadJson(jsonFile), "Results"));
 
-      map.display(datasets);
+      prepareForVisualization(jsonFile)
+      
+      datasets.push(new Dataset(GeoTemConfig.loadJson(jsonFile), "Results"));
+      datasetsWithLocation.push(new Dataset(GeoTemConfig.loadJson(searchResultsWithLocation), "Results"));
+      
+      map.display(datasetsWithLocation);
       time.display(datasets);
-      table.display(datasets);
+      table.display(datasetsWithLocation);
+
+      // Filter out entities with location set (to global variable),
+      // Normalize time notation (e.g. 'ca. 1450 - 1455' to 4 digits)
+      // Add information for table and details in map 
+      function prepareForVisualization(results) {
+        for (i = 0; i < results.length; i++) {
+          if (results[i].lon) {
+            searchResultsWithLocation.push(results[i]);
+          }
+
+          if (results[i].time && results[i].time.match("\\d{4}")) {
+            results[i].time = results[i].time.match("\\d{4}")[0];
+          }
+
+          results[i].description = "<![CDATA[<b>" + results[i].name + " (" + results[i].time + "). </b><br/><br/>Location: " + results[i].place,
+          results[i].tableContent =  {'name': results[i].name, 'place': results[i].place, 'time': results[i].time }
+        }
+      }
     </script>
   <?php elseif ($empty): ?>
     <div class="view-empty">
