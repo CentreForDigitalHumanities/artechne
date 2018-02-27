@@ -90,7 +90,7 @@
       
       map.display(datasetsWithLocation);
       time.display(datasets);
-      table.display(datasetsWithLocation);
+      table.display(datasets);
 
       // Filter out entities with location set (to global variable),
       // Normalize time notation (e.g. 'ca. 1450 - 1455' to 4 digits)
