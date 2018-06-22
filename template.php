@@ -256,9 +256,13 @@ function _getty_cona_link($id) {
  * @see https://api.drupal.org/api/drupal/modules%21node%21node.module/function/template_preprocess_node/7.x
  */
 function artechne_preprocess_node(&$variables) {
-  // Display the content type as title_suffix for all nodes (except basic pages)
+  // Display the content type (with image and colored label) as title_suffix for all nodes (not in basic pages)
   if ($variables['type'] != 'page') {
-    $variables['title_suffix'] = '<span class="label label-default pull-right">' . node_type_get_name($variables['node']) . '</span>';
+    $node_type = node_type_get_name($variables['node']);
+    $node_type_css_class = explode(' ',trim($node_type))[0];
+    
+    $variables['title_prefix'] = '<span class="node-title-prefix pull-right ' . $node_type_css_class . '"></span>';
+    $variables['title_suffix'] = '<span class="label pull-right ' . $node_type_css_class . '-label">' . node_type_get_name($variables['node']) . '</span>';
   }
 
   // For Person and Glossary items, retrieve extra biographical details via SPARQL
