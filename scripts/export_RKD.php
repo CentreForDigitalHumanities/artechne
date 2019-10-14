@@ -1,6 +1,6 @@
 <?php
 
-define(EXPORT_BASE, '/home/ahebing/rkd_export_3007/');
+define(EXPORT_BASE, '/home/ahebing/rkd_export_1110/');
 define(RKD_TERMS, '/home/ahebing/terms.json');
 
 // store queries made to geonames (see get_source_place), 
@@ -42,7 +42,7 @@ function get_annotations($node)
     if (count($results) == 0) {
         return null;
     }
-    
+
     return implode("; ", $results);
 }
 
@@ -70,7 +70,7 @@ function get_starting_date($node)
     $results = [];
 
     $field_starting_date = $node->field_starting_date['und'][0]['value'];
-    if (!is_null($field_starting_date)) {        
+    if (!is_null($field_starting_date)) {
         array_push($results, $field_starting_date);
     }
 
@@ -88,7 +88,7 @@ function get_starting_date($node)
     if (count($results) == 0) {
         return null;
     }
-    
+
     return implode(", ", $results);
 }
 
@@ -110,7 +110,7 @@ function get_end_date($node)
     if (count($results) == 0) {
         return null;
     }
-    
+
     return implode(", ", $results);
 }
 
@@ -140,7 +140,7 @@ function get_remarks($node)
     if (count($results) == 0) {
         return null;
     }
-    
+
     return implode("; ", $results);
 }
 
@@ -150,7 +150,7 @@ function get_manuscript_link($node)
     $url = $node->field_link_to_manuscript['und'][0]['url'];
 
     $result = null;
-    
+
     if (!is_null($url)) {
         // if dbnl rearrange
         if (strpos($url, 'dbnl') !== false) {
@@ -172,13 +172,13 @@ function rearrange_dbnl_link($url)
 
     // on the P server there is only one source from dbnl referenced in the old style, so
     // if old url style    
-    if (strpos($url, 'scan') !== false) {        
-        $base = "https://www.dbnl.org/tekst/mand001schi01_01/";        
+    if (strpos($url, 'scan') !== false) {
+        $base = "https://www.dbnl.org/tekst/mand001schi01_01/";
         $index = strrpos($url, "=");
         $detail = str_replace("scan", "", substr($url, $index + 1)) . ".php";
         $result = $base . $detail;
     }
-    
+
     return $result;
 }
 
@@ -200,7 +200,7 @@ function yields_404($url)
 }
 
 // field_library, field_ms_id, field_page_numbers, field_source_title, title, => AUTEURNAAM...?
-function get_title($node) 
+function get_title($node)
 {
     $results = [];
 
@@ -209,17 +209,17 @@ function get_title($node)
         array_push($results, $title);
     }
 
-    $field_source_title_comp = $node->field_source_title_comp['und'][0]['value'];    
-    if (!is_null($field_source_title_comp)) {
-        array_push($results, $field_source_title_comp);
+    $source_title = get_source_title($node);
+    if (!is_null($source_title)) {
+        array_push($results, $source_title);
     }
 
-    $field_source_author = $node->field_source_author['und'][0]['value'];
+    $field_source_author = get_source_author($node);
     if (!is_null($field_source_author)) {
         array_push($results, $field_source_author);
     }
 
-    $field_page_numbers = $node->field_page_numbers['und'][0]['value'];    
+    $field_page_numbers = $node->field_page_numbers['und'][0]['value'];
     if (!is_null($field_page_numbers)) {
         array_push($results, $field_page_numbers);
     }
@@ -237,19 +237,19 @@ function get_title($node)
     if (count($results) == 0) {
         return null;
     }
-    
+
     return str_replace(array("\r", "\n"), '', implode(", ", $results));
 }
 
 function get_transcription($node)
 {
-    $transcription = $node->field_transcription['und'][0]['value'];    
+    $transcription = $node->field_transcription['und'][0]['value'];
     $result = str_replace(array("\r", "\n"), '', $transcription);
-    
+
     if (strlen($result) == 0) {
         $result = null;
     }
-    return $result;    
+    return $result;
 }
 
 function get_translation($node)
@@ -263,12 +263,13 @@ function get_translation($node)
 }
 
 // source => field_source_location
-function get_source_location($node) {
+function get_source_location($node)
+{
     $result = null;
-    
+
     $lat = $node->field_source_latitude['und'][0]['value'];
     $lon = $node->field_source_longitude['und'][0]['value'];
-    
+
     if (!is_null($lat)) {
         $result = $lat . ", " . $lon;
     }
@@ -278,7 +279,8 @@ function get_source_location($node) {
 
 
 // source => field_source_location
-function get_source_place($node) {
+function get_source_place($node)
+{
     global $queried_lat_lons;
     $is_new = false;
     $result = null;
@@ -286,27 +288,26 @@ function get_source_place($node) {
     if (!$queried_lat_lons) {
         $queried_lat_lons = [];
     }
-    
+
     $lat = $node->field_source_latitude['und'][0]['value'];
     $lon = $node->field_source_longitude['und'][0]['value'];
-    
+
     if (!is_null($lat)) {
         $lat_lon = $lat . $lon;
-                
+
         if (array_key_exists($lat_lon, $queried_lat_lons)) {
-            return $queried_lat_lons[$lat_lon]; 
-        }
-        else {
+            return $queried_lat_lons[$lat_lon];
+        } else {
             $is_new = true;
         }
-        
+
         $url = "http://api.geonames.org/findNearbyJSON?username=alexhebing&lat=" . $lat . "&lng=" . $lon . "&featureClass=P&featureCode=PPL&featureCode=PPLA&featureCode=PPLA2&featureCode=PPLA3&featureCode=PPLA4&featureCode=PPLC&featureCode=PPLCH";
-        
+
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = json_decode(curl_exec($ch), true);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        
+
         if ($http_code == 200 && $response) {
             $result = $response["geonames"][0]["name"];
         }
@@ -321,9 +322,49 @@ function get_source_place($node) {
     return $result;
 }
 
-function get_languages($node) {    
+function get_source_title($node)
+{
+    $source = relation_get_related_entity('node', $node->nid, 'is_documented_in', 0);
+    if ($source) return $source->title;
+    else return null;
+}
+
+function get_source_author($node)
+{
+    $authors = array();
+
+    $source = relation_get_related_entity('node', $node->nid, 'is_documented_in', 0);
+
+    if ($source) {
+        $query = relation_query('node', $source->nid);
+        $query->propertyCondition('relation_type', 'has_role_in');
+        $results = $query->execute();
+
+        if ($results) {
+            foreach (relation_load_multiple(array_keys($results)) as $relation) {
+                $relation_node = relation_load($relation->rid);
+
+                if ($relation_node->field_role['und'][0]['value'] == 'author') {
+                    foreach (relation_get_endpoints($relation, 'node') as $related_nodes) {
+                        foreach ($related_nodes as $related_node) {
+                            if ($related_node->nid <> $source->nid) {
+                                array_push($authors, $related_node->title);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    $value = count($authors) > 0 ? implode(", ", $authors) : NULL;
+    return $value;
+}
+
+function get_languages($node)
+{
     $field_language = str_replace(array("\n", "\r", ' '), '', $node->field_language['und'][0]['value']);
-        
+
     # transform special cases or simply return value
     switch ($field_language) {
         case '':
@@ -346,10 +387,11 @@ function get_languages($node) {
     }
 }
 
-function get_terms($node) {
+function get_terms($node)
+{
 
     $mentioned_names = [];
-    
+
     // get related current names
     foreach (get_related_nodes('glossary_recipes', $node->nid) as $cn) {
         array_push($mentioned_names, get_clean_name($cn->title));
@@ -366,13 +408,13 @@ function get_terms($node) {
             $name = get_clean_name($cn->title);
             if (!in_array($name, $mentioned_names)) {
                 array_push($mentioned_names, $name);
-            }   
+            }
         }
     }
 
     $ids = [];
-    
-    foreach ($mentioned_names as $name) {        
+
+    foreach ($mentioned_names as $name) {
         if (!empty($name)) {
             $rkd_id = get_rkd_id($name);
             if ($rkd_id && !in_array($rkd_id, $ids)) {
@@ -384,13 +426,15 @@ function get_terms($node) {
     return array("tW" => $ids);
 }
 
-function get_related_nodes($relation_type, $node_id) {         
+function get_related_nodes($relation_type, $node_id)
+{
     $relation_list = relation_load_multiple(array_keys(query_for_relations($relation_type, $node_id)));
     $related_nodes = extract_related_nodes($relation_list, $node_id);
     return $related_nodes;
 }
 
-function query_for_relations($relation_type, $node_id) {        
+function query_for_relations($relation_type, $node_id)
+{
     $query = relation_query();
     $query->related('node', $node_id, NULL);
     $query->propertyCondition('relation_type', $relation_type);
@@ -399,13 +443,14 @@ function query_for_relations($relation_type, $node_id) {
     return $result;
 }
 
-function extract_related_nodes($relation_list, $node_id) {
+function extract_related_nodes($relation_list, $node_id)
+{
     $result = array();
 
     foreach ($relation_list as $relation) {
         foreach (relation_get_endpoints($relation, 'node') as $related_nodes) {
-            foreach ($related_nodes as $related_node) {                    
-                if ($related_node->nid <> $node_id) {                    
+            foreach ($related_nodes as $related_node) {
+                if ($related_node->nid <> $node_id) {
                     array_push($result, $related_node);
                 }
             }
@@ -415,10 +460,11 @@ function extract_related_nodes($relation_list, $node_id) {
     return $result;
 }
 
-function get_rkd_id($term) {
+function get_rkd_id($term)
+{
     global $rkd_terms;
 
-    foreach ($rkd_terms as $rkd_term) {        
+    foreach ($rkd_terms as $rkd_term) {
         if ($term == strtolower($rkd_term['term'])) {
             return ($rkd_term['id']);
         }
@@ -465,19 +511,21 @@ function get_rkd_excerpt($node)
         'vo' => 'recept',
     );
 
-    return array_replace($languages, $terms, $rest);    
+    return array_replace($languages, $terms, $rest);
 }
 
 ####################
 ### EXPORT
-function write_to_file($text) {    
+function write_to_file($text)
+{
     // echo $text;
 
     $file = create_dir(EXPORT_BASE, null) . "/artechne_export.dat";
     file_put_contents($file, $text, FILE_APPEND);
 }
 
-function load_rkd_terms() {
+function load_rkd_terms()
+{
     $json = file_get_contents(RKD_TERMS);
     return json_decode($json, true);
 }
@@ -494,11 +542,11 @@ function main()
     $nodes = get_nodes('recipes');
 
     // $tw_count = 0;
-    
+
     foreach ($nodes as $node) {
         $n = node_load($node->nid);
         $rkd_excerpt_dict = get_rkd_excerpt($n);
-        
+
         write_to_file("**\n");
 
         foreach ($rkd_excerpt_dict as $key => $value) {
@@ -534,7 +582,7 @@ function get_nodes($type)
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
         ->entityCondition('bundle', $type);
-        // ->propertyCondition('nid', '94396'); //889001 87588 // example export: 94002 (lange tekst in transcriptie) // 89844, 89777 (coordinates) / cn 86815
+        // ->propertyCondition('nid', '888748'); //889001 87588 // example export: 94002 (lange tekst in transcriptie) // 89844, 89777 (coordinates) / cn 86815
     $result = $query->execute();
 
     $nodes = $result['node'];
@@ -545,7 +593,7 @@ function get_nodes($type)
 function create_dir($base, $name)
 {
     $dir = $base;
-    
+
     if (!is_null($name)) {
         $dir = $base . $name . '/';
     }
